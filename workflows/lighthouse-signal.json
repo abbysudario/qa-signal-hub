@@ -1,0 +1,35 @@
+{
+  "name": "lighthouse-signal",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lighthouse-signal",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "9af2ca46-f65c-47fd-af5f-dde0ddde3ec6",
+      "name": "Webhook",
+      "webhookId": "dc873c89-829e-49ec-b213-933837bdb332"
+    }
+  ],
+  "pinData": {},
+  "connections": {},
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "4fb4548d-c989-4ff7-a04e-5042c9a9a6e2",
+  "meta": {
+    "instanceId": "cd5310a2f218ca0e89da041bf8205768127717964b497bbde4d8fe8ed811f022"
+  },
+  "id": "djIFi4NQ7yl09NUn",
+  "tags": []
+}
