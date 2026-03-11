@@ -10,24 +10,422 @@
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 2.1,
       "position": [
-        0,
-        0
+        -848,
+        16
       ],
       "id": "9af2ca46-f65c-47fd-af5f-dde0ddde3ec6",
       "name": "Webhook",
       "webhookId": "dc873c89-829e-49ec-b213-933837bdb332"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ad17ca9c-8af4-4234-86fb-fa7d603bbc5e",
+              "leftValue": "={{ $json.body.classifications.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -688,
+        16
+      ],
+      "id": "1f370bab-abe1-4668-842a-35a63d660ff1",
+      "name": "Has Classifications?"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "body.classifications",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        -64
+      ],
+      "id": "a6cff57e-2fce-46e5-b433-29359f6bb894",
+      "name": "Split Classifications"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "REGRESSION",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "dd76721c-b568-49fa-b739-cc06a52663c7"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "regression"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "c58cc6e3-4652-4e01-90b2-66c80c52d6e5",
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "ENVIRONMENT",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "environment"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "e7f4788b-3ee1-437c-963b-d2160d33cff7",
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "FLAKY",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "flaky"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3d99affa-e74c-42c7-b105-04aa80936439",
+                    "leftValue": "={{ $json.type }}",
+                    "rightValue": "UNKNOWN",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "unknown"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -336,
+        -96
+      ],
+      "id": "c5c80b3d-7e58-41d8-8c4c-b433f01454fa",
+      "name": "Route By Type"
+    },
+    {
+      "parameters": {
+        "owner": {
+          "__rl": true,
+          "value": "abbysudario",
+          "mode": "list",
+          "cachedResultName": "abbysudario",
+          "cachedResultUrl": "https://github.com/abbysudario"
+        },
+        "repository": {
+          "__rl": true,
+          "value": "lighthouse-qa",
+          "mode": "list",
+          "cachedResultName": "lighthouse-qa",
+          "cachedResultUrl": "https://github.com/abbysudario/lighthouse-qa"
+        },
+        "title": "={{ '[' + $('Split Classifications').item.json.type + '] ' + $('Split Classifications').item.json.test }}",
+        "body": "=**Test:** {{ $('Split Classifications').item.json.test }}\n**File:** {{ $('Split Classifications').item.json.file }}\n**Type:** {{ $('Split Classifications').item.json.type }}\n**Confidence:** {{ $('Split Classifications').item.json.confidence }}\n**Error:** {{ $('Split Classifications').item.json.error }}\n**Run URL:** {{ $('Webhook').item.json.body.run_url }}\n**Branch:** {{ $('Webhook').item.json.body.branch }}\n**Commit:** {{ $('Webhook').item.json.body.commit }}",
+        "labels": [
+          {
+            "label": "={{ $('Split Classifications').item.json.type.toLowerCase() }}"
+          }
+        ],
+        "assignees": []
+      },
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1.1,
+      "position": [
+        272,
+        32
+      ],
+      "id": "b7bc0238-d1b9-4df4-90f9-daa959d9b3f8",
+      "name": "Create an issue",
+      "webhookId": "a17b5969-cba3-4c9e-a1b4-66468f094d6f",
+      "credentials": {
+        "githubApi": {
+          "id": "vHjMXwh9kQuSLoUt",
+          "name": "lighthouse-qa-issues"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://api.github.com/search/issues",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "githubApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ 'repo:abbysudario/lighthouse-qa is:issue is:open in:title [' + $json.type + '] ' + $json.test }}"
+            },
+            {
+              "name": "per_page",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        -144,
+        -64
+      ],
+      "id": "3e5e6cf7-0fa7-44b9-a83f-719c0d4e1862",
+      "name": "Search Existing Issues",
+      "credentials": {
+        "githubApi": {
+          "id": "vHjMXwh9kQuSLoUt",
+          "name": "lighthouse-qa-issues"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        96
+      ],
+      "id": "e5daa80f-99b1-4684-a5b7-98451457a61a",
+      "name": "Exit: No Failures"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c51b3432-cf65-4990-8a5a-213953d39ab8",
+              "leftValue": "={{ $json.total_count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        64,
+        -64
+      ],
+      "id": "f88a4602-c9e7-4b04-819f-4964935e86b7",
+      "name": "Issue Already Exists?"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        272,
+        -176
+      ],
+      "id": "4c979d7a-6fd1-4a27-a59d-f3d397fee935",
+      "name": "Exit: Duplicate"
     }
   ],
   "pinData": {},
-  "connections": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Has Classifications?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Classifications?": {
+      "main": [
+        [
+          {
+            "node": "Split Classifications",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Exit: No Failures",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Classifications": {
+      "main": [
+        [
+          {
+            "node": "Route By Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route By Type": {
+      "main": [
+        [
+          {
+            "node": "Search Existing Issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Existing Issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Existing Issues",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Search Existing Issues",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search Existing Issues": {
+      "main": [
+        [
+          {
+            "node": "Issue Already Exists?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Issue Already Exists?": {
+      "main": [
+        [
+          {
+            "node": "Exit: Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create an issue",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
   "active": true,
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "4fb4548d-c989-4ff7-a04e-5042c9a9a6e2",
+  "versionId": "fe7abc3e-e6d3-4870-868d-73ef8adf0bda",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "cd5310a2f218ca0e89da041bf8205768127717964b497bbde4d8fe8ed811f022"
   },
   "id": "djIFi4NQ7yl09NUn",
