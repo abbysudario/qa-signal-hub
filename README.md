@@ -6,6 +6,8 @@ QA Signal Hub is the companion repo to [Lighthouse](https://github.com/abbysudar
 
 Lighthouse produces truth. QA Signal Hub produces action.
 
+Built to route every CI failure into a trackable GitHub Issue to alert the team, because an unread test result is not a quality signal, it is noise.
+
 ---
 
 QA Signal Hub does not run tests. It does not decide what to fix. It observes signals coming out of Lighthouse, classifies them by failure type, and creates trackable GitHub Issues so nothing gets lost between a failing CI run and an engineer's attention.
